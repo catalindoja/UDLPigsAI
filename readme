@@ -1,0 +1,16 @@
+convert video to frames use:
+
+python3 convert_video_to_frames.py ./input/C1_29-3.mp4 ./output/ 60
+
+first parameter (./input/*) is the input video to be processed.
+second parameter (./output/) is the folder where the frames will be stored.
+third parameter (number) is the frames to be skipped every iteration. For example in a 60 frames per second video
+60 means that the program will get a frame every second.
+
+
+laplacian blur filter use:
+
+python3 laplacian_blur_filter.py
+
+The program will take the given folder and it will cycle through the images in it to apply the laplacian filter.
+If the image is considered blurry by the image, then it will be deleted from the folder.
