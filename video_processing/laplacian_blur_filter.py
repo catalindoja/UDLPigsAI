@@ -1,3 +1,4 @@
+import sys
 import cv2
 import os
 
@@ -10,28 +11,30 @@ def calculate_focal_measure(img):
     return fm
 
 
+def laplacian_filer(directory, threshold):
+    # iterate over files
+    for filename in os.listdir(directory):
+        file = os.path.join(directory, filename)
+        # checking if it is a file
+        if os.path.isfile(file):
+            print(file)
+            image = cv2.imread(file)
+            focal_measure = calculate_focal_measure(image)
+            print("focal-measure-score", focal_measure)
+            # the int number here is a threshold to be determined
+            if focal_measure > int(threshold):
+                print("non blurry")
+            else:
+                print("blurry")
+                os.remove(file)
 
 
-# assign directory
-directory = 'output/'
+if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print("Error, this application needs 1 parameters to run!")
+        sys.exit()
 
-# iterate over files in
-# that directory
-for filename in os.listdir(directory):
-    file = os.path.join(directory, filename)
-    # checking if it is a file
-    if os.path.isfile(file):
-        print(file)
-        image = cv2.imread(file)
-        focal_measure = calculate_focal_measure(image)
-        print("focal-measure-score", focal_measure)
-
-        if focal_measure > 100:
-            status = "Non Blurry"
-            print("non blurry")
-            color = (255, 0, 0)
-        else:
-            status = "Blurry"
-            print("blurry")
-            color = (0, 0, 255)
-            os.remove(file)
+    if len(sys.argv[1]) and len(sys.argv[2]) > 0:
+        directory = sys.argv[1]
+        threshold = sys.argv[2]
+        laplacian_filer(directory, threshold)

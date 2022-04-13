@@ -10,7 +10,11 @@ third parameter (number) is the frames to be skipped every iteration. For exampl
 
 laplacian blur filter use:
 
-python3 laplacian_blur_filter.py
+python3 laplacian_blur_filter.py ./output/ 120
+
+first parameter (./output/) is the folder where the images to be analysed are
+second paramater (integer) is used as a value for the threshold of the laplacian focal measure.
+Any image bellow that value will be deleted.
 
 The program will take the given folder and it will cycle through the images in it to apply the laplacian filter.
 If the image is considered blurry by the image, then it will be deleted from the folder.
