@@ -31,7 +31,7 @@ def laplacian_filer(directory, threshold):
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print("Error, this application needs 1 parameters to run!")
+        print("Error, this application needs 2 parameters to run!")
         sys.exit()
 
     if len(sys.argv[1]) and len(sys.argv[2]) > 0:
