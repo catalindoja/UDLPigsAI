@@ -72,11 +72,12 @@ def splitter(directory):
                     val1 += 1
                     tiles = im[y:y+m, x:x+n]
                     if val1 == 1:
-                        cv2.imwrite(os.path.join(animal_nr_directory, os.path.splitext(filename)[0]+"_pig.jpg"), tiles)
+                        cv2.imwrite(os.path.join(animal_nr_directory, os.path.splitext(filename)[0]+"_animal_nr.jpg"),
+                                    tiles)
                     if val1 == 2:
-                        cv2.imwrite(os.path.join(weight_directory, os.path.splitext(filename)[0]+"_pig.jpg"), tiles)
+                        cv2.imwrite(os.path.join(weight_directory, os.path.splitext(filename)[0]+"_weight.jpg"), tiles)
                     if val1 == 3:
-                        cv2.imwrite(os.path.join(run_nr_directory, os.path.splitext(filename)[0]+"_pig.jpg"), tiles)
+                        cv2.imwrite(os.path.join(run_nr_directory, os.path.splitext(filename)[0]+"_run_nr.jpg"), tiles)
 
             # clean the useless splitted base images
             for i in range(1, 4):
