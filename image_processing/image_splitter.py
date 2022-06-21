@@ -85,7 +85,6 @@ def splitter(directory):
                     os.remove(os.path.splitext(filename)[0] + str(i)+".jpg")
 
 
-
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         print("Error, this application needs 1 parameters to run!")
