@@ -38,8 +38,8 @@ def splitter(directory):
             print(os.path.splitext(filename)[0])
 
             im = cv2.imread(file)
-            im = cv2.resize(im, (1920, 1080))
-
+            im = cv2.resize(im, (512, 512))
+            # cv2.imwrite(os.path.join("./", os.path.splitext(filename)[0] + "_2.jpg"), im)
             imgheight, imgwidth, channels = im.shape
 
             # M is the number of rows, N is the number of columns
@@ -80,8 +80,10 @@ def splitter(directory):
                         cv2.imwrite(os.path.join(run_nr_directory, os.path.splitext(filename)[0]+"_run_nr.jpg"), tiles)
 
             # clean the useless splitted base images
-            for i in range(1, 4):
-                os.remove(os.path.splitext(filename)[0] + str(i)+".jpg")
+            for i in range(1, 5):
+                if os.path.isfile(os.path.splitext(filename)[0] + str(i)+".jpg"):
+                    os.remove(os.path.splitext(filename)[0] + str(i)+".jpg")
+
 
 
 if __name__ == '__main__':

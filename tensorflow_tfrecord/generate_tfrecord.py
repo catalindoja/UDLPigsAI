@@ -37,12 +37,26 @@ def isfloat(num):
 
 # TO-DO replace this with label map
 def class_text_to_int(row_label):
-    if row_label == 'pig':
+    if row_label == 1:
         return 1
-    elif 'nr' in row_label:
+    elif row_label == 2:
         return 2
-    elif isfloat(row_label):
+    elif row_label == 3:
         return 3
+    elif row_label == 4:
+        return 4
+    elif row_label == 5:
+        return 5
+    elif row_label == 6:
+        return 6
+    elif row_label == 7:
+        return 7
+    elif row_label == 8:
+        return 8
+    elif row_label == 9:
+        return 9
+    elif row_label == 10:
+        return 10
     else:
         None
 
@@ -74,7 +88,7 @@ def create_tf_example(group, path):
         xmaxs.append(row['xmax'] / width)
         ymins.append(row['ymin'] / height)
         ymaxs.append(row['ymax'] / height)
-        classes_text.append(row['class'].encode('utf8'))
+        classes_text.append(str(row['class']).encode('utf8'))
         classes.append(class_text_to_int(row['class']))
 
     tf_example = tf.train.Example(features=tf.train.Features(feature={
