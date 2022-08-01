@@ -3,7 +3,10 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, MaxPool2D, Flatten, Activation
 from keras import backend as K
+from keras.optimizer_v2.gradient_descent import SGD
 from keras.preprocessing.image import ImageDataGenerator
+import matplotlib.pyplot as plt
+
 
 # config
 img_width, img_height = 170, 170 #width & height of input image
@@ -11,8 +14,8 @@ input_depth = 1 #1: gray image
 train_data_dir = 'images_folder_label/train' #data training path
 testing_data_dir = 'images_folder_label/test' #data testing path
 validation_data_dir = 'images_folder_label/validation' #data validation path
-epochs = 12 #number of training epoch
-batch_size = 4 #training batch size
+epochs = 15 #number of training epoch
+batch_size = 8 #training batch size
 
 # define image generator for Keras,
 # here, we map pixel intensity to 0-1
@@ -42,11 +45,11 @@ validation_generator = validation_datagen.flow_from_directory(
 
 
 # define number of filters and nodes in the fully connected layer
-NUMB_FILTER_L1 = 40
-NUMB_FILTER_L2 = 40
-NUMB_FILTER_L3 = 40
-NUMB_NODE_FC_LAYER = 20
-
+NUMB_FILTER_L1 = 32
+NUMB_FILTER_L2 = 64
+NUMB_FILTER_L3 = 128
+NUMB_NODE_FC_LAYER = 32
+# potser 120 al layers i al final un 60
 #define input image order shape
 if K.image_data_format() == 'channels_first':
     input_shape_val = (input_depth, img_width, img_height)
@@ -57,14 +60,14 @@ else:
 model = Sequential()
 
 # Layer 1
-model.add(Conv2D(NUMB_FILTER_L1, (5, 5),
+model.add(Conv2D(NUMB_FILTER_L1, (7, 7),
                  input_shape=input_shape_val,
                  padding='same', name='input_tensor'))
 model.add(Activation('relu'))
 model.add(MaxPool2D((2, 2)))
 
 # Layer 2
-model.add(Conv2D(NUMB_FILTER_L2, (5, 5), padding='same'))
+model.add(Conv2D(NUMB_FILTER_L2, (7, 7), padding='same'))
 model.add(Activation('relu'))
 model.add(MaxPool2D((2, 2)))
 
@@ -82,9 +85,10 @@ model.add(Dense(NUMB_NODE_FC_LAYER, activation='relu'))
 model.add(Dense(train_generator.num_classes,
                 activation='softmax', name='output_tensor'))
 
+
 # Compilile the network
 model.compile(loss='categorical_crossentropy',
-              optimizer='sgd', metrics=['accuracy'])
+              optimizer="sgd", metrics=['accuracy'])
 
 # Show the model summary
 model.summary()
@@ -100,11 +104,19 @@ model.fit(
     #number of iteration per epoch = number of data / batch size
     validation_steps=np.floor(testing_generator.n / batch_size))
 
+
+predictions = model.predict_generator(testing_generator, steps=1, verbose=0)
+print("Predictions: ")
+print(predictions)
+
+print("Classes indexes: ")
+print(testing_generator.class_indices)
+
 print("Model evaluation")
 loss = model.evaluate(validation_generator, steps=np.floor(validation_generator.n / batch_size))
 print("Loss = "+str(loss))
 # generator.classes
 
 print("Training is done!")
-model.save('model/modelLeNet5.h5')
+model.save('model/model.h5')
 print("Model is successfully stored!")

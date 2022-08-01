@@ -6,7 +6,7 @@ from keras import backend as K
 from keras.preprocessing.image import ImageDataGenerator
 from tensorflow import keras
 
-new_model = keras.models.load_model('./model/model_pig_nr_99_87.h5')
+new_model = keras.models.load_model('./model/model.h5')
 
 new_model.summary()
 img_width, img_height = 170, 170 #width & height of input image
