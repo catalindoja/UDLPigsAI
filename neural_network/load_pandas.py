@@ -14,7 +14,7 @@ def readFiles(directory):
     return df
 
 
-df = readFiles('./jsons/')
-print(df)
-
+if __name__ == '__main__':
+    df = readFiles('./jsons/')
+    print(df)
 
