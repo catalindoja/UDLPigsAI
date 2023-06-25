@@ -1,4 +1,4 @@
-convert video to frames use:
+convert video to frames use:used for code block executions.
 
 python3 convert_video_to_frames.py ./input/C1_29-3.mp4 ./output/ 60
 
