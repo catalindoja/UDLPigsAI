@@ -37,52 +37,60 @@ def splitter(directory):
         if os.path.isfile(file):
             print(os.path.splitext(filename)[0])
 
+            # image resizing just in case images are not in the right sizes
             im = cv2.imread(file)
             im = cv2.resize(im, (512, 512))
-            # cv2.imwrite(os.path.join("./", os.path.splitext(filename)[0] + "_2.jpg"), im)
             imgheight, imgwidth, channels = im.shape
 
-            # M is the number of rows, N is the number of columns
-            m = imgheight//1
-            n = imgwidth//3
-
-            val1 = 0
-            for y in range(0, imgheight, m):
-                for x in range(0, imgwidth, n):
-                    val1 += 1
-
-                    tiles = im[y:y+m, x:x+n]
-
-                    cv2.imwrite(os.path.splitext(filename)[0] + str(val1)+".jpg", tiles)
-
-            img1 = cv2.imread(os.path.splitext(filename)[0]+"2.jpg")
-            img2 = cv2.imread(os.path.splitext(filename)[0]+"3.jpg")
-            vis = np.concatenate((img1, img2), axis=1)
-            cv2.imwrite(os.path.join(pig_directory, os.path.splitext(filename)[0]+"_pig.jpg"), vis)
-
+            # separate the image into 3 vertical parts and then rejoin two of them to get the animals image
+            vertical_cuts(imgheight, imgwidth, im, filename, pig_directory)
             # read the first third of the image to process it into the 3 respective folders
             im = cv2.imread(os.path.splitext(filename)[0]+"1.jpg")
-            # M is the number of rows, N is the number of columns
-            m = imgheight//3
-            n = imgwidth//1
+            horizontal_cuts(imgheight, imgwidth, im, filename, weight_directory, animal_nr_directory, run_nr_directory)
+            # deletion of the images that are of no use from the folder
+            clean_residual_images(filename)
 
-            val1 = 0
-            for y in range(0, imgheight, m):
-                for x in range(0, imgwidth, n):
-                    val1 += 1
-                    tiles = im[y:y+m, x:x+n]
-                    if val1 == 1:
-                        cv2.imwrite(os.path.join(animal_nr_directory, os.path.splitext(filename)[0]+"_animal_nr.jpg"),
-                                    tiles)
-                    if val1 == 2:
-                        cv2.imwrite(os.path.join(weight_directory, os.path.splitext(filename)[0]+"_weight.jpg"), tiles)
-                    if val1 == 3:
-                        cv2.imwrite(os.path.join(run_nr_directory, os.path.splitext(filename)[0]+"_run_nr.jpg"), tiles)
 
-            # clean the useless splitted base images
-            for i in range(1, 5):
-                if os.path.isfile(os.path.splitext(filename)[0] + str(i)+".jpg"):
-                    os.remove(os.path.splitext(filename)[0] + str(i)+".jpg")
+def vertical_cuts(imgheight, imgwidth, im, filename, pig_directory):
+    rows = imgheight // 1
+    columns = imgwidth // 3
+
+    filename_extension = 0
+    for y in range(0, imgheight, rows):
+        for x in range(0, imgwidth, columns):
+            filename_extension += 1
+            tiles = im[y:y + rows, x:x + columns]
+            cv2.imwrite(os.path.splitext(filename)[0] + str(filename_extension) + ".jpg", tiles)
+
+    img1 = cv2.imread(os.path.splitext(filename)[0] + "2.jpg")
+    img2 = cv2.imread(os.path.splitext(filename)[0] + "3.jpg")
+    vis = np.concatenate((img1, img2), axis=1)
+    cv2.imwrite(os.path.join(pig_directory, os.path.splitext(filename)[0] + "_pig.jpg"), vis)
+
+
+def horizontal_cuts(imgheight, imgwidth, im, filename, weight_directory, animal_nr_directory, run_nr_directory):
+    rows = imgheight // 3
+    columns = imgwidth // 1
+
+    filename_extension = 0
+    for y in range(0, imgheight, rows):
+        for x in range(0, imgwidth, columns):
+            filename_extension += 1
+            tiles = im[y:y + rows, x:x + columns]
+            if filename_extension == 1:
+                cv2.imwrite(os.path.join(animal_nr_directory, os.path.splitext(filename)[0] + "_animal_nr.jpg"),
+                            tiles)
+            if filename_extension == 2:
+                cv2.imwrite(os.path.join(weight_directory, os.path.splitext(filename)[0] + "_weight.jpg"), tiles)
+            if filename_extension == 3:
+                cv2.imwrite(os.path.join(run_nr_directory, os.path.splitext(filename)[0] + "_run_nr.jpg"), tiles)
+
+
+def clean_residual_images(filename):
+    # clean the useless split base images
+    for i in range(1, 5):
+        if os.path.isfile(os.path.splitext(filename)[0] + str(i) + ".jpg"):
+            os.remove(os.path.splitext(filename)[0] + str(i) + ".jpg")
 
 
 if __name__ == '__main__':
